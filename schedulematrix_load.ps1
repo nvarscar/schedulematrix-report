@@ -20,19 +20,7 @@ Param (
 	[string]$LogFileFolder = "."
 )
 BEGIN {
-	# Load up shared functions
-	$currentdir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-	. "$currentdir\Write-Log.ps1"
-	
-	# Create Log File 
-	$Date = Get-Date -Format yyyyMMdd_HHmmss
-	$LogFilePath = $LogFileFolder + '\' + 'dbareports_AgentJobHostory_' + $Date + '.txt'
-	try {
-		Write-Log -path $LogFilePath -message "Agent Job History started" -level info
-	}
-	catch {
-		Write-error "Failed to create Log File at $LogFilePath"
-	}
+	Write-Verbose -Message "Agent Job History started: $((Get-Date).DateTime)"
 	
 	# Specify table name that we'll be inserting into
 	$table = "schedulematrix.JobScheduleStage"
@@ -40,28 +28,23 @@ BEGIN {
 	$tablename = $table.Split(".")[1]
 	
 	# Connect to the target server
-	try {
-		Write-Log -path $LogFilePath -message "Connecting to $TargetServer" -level info
-		$tgtserver = Connect-DbaInstance -SqlInstance $TargetServer -SqlCredential $TargetCredential -ErrorAction Stop 
-	}
-	catch {
-		Write-Log -path $LogFilePath -message "Failed to connect to $TargetServer - $_" -level Error
-	}
+	Write-Verbose -Message "Connecting to $TargetServer"
+	$tgtserver = Connect-DbaInstance -SqlInstance $TargetServer -SqlCredential $TargetCredential -ErrorAction Stop
 }
-
 PROCESS {
 	foreach ($sqlsrv in $SourceServer) {
 		# Connect to Instance
 		try {
-			Write-Log -path $LogFilePath -message "Connecting to $sqlsrv" -level info
+			Write-Verbose -Message "Connecting to $sqlsrv"
 			$server = Connect-DbaInstance -SqlInstance $sqlsrv -SqlCredential $SourceCredential -ErrorAction Stop 
 		}
 		catch {
-			Write-Log -path $LogFilePath -message "Failed to connect to $sqlsrv - $_" -level Warn
+			Write-Warning -Message "Failed to connect to $sqlsrv - $_"
 			continue
 		}
 		
 		# Get job history
+		Write-Verbose -Message "Collecting job history from $sqlsrv"
 		$jobHistory = Get-DbaAgentJobHistory -SqlInstance $server -NoJobSteps | 
 			Where-Object { $_.RunStatus -in 1, 0 } | #Only Successful or Failed jobs
 			Select-Object -Property @(
@@ -75,18 +58,20 @@ PROCESS {
 		)
 		#Insert into staging table	
 		try {
-			Write-Log -path $LogFilePath -message "Writing data from $sqlsrv" -level info
+			Write-Verbose -Message "Writing data from $sqlsrv to $tgtserver.$TargetDatabase"
 			Out-DbaDataTable -InputObject $jobHistory | Write-DbaDataTable -SqlInstance $tgtserver -Database $TargetDatabase -Schema $schema -Table $tablename -EnableException -ErrorAction Stop
 		}
 		catch {
-			Write-Log -path $LogFilePath -message "Failed to write data to $tgtserver - $_" -level Error
+			Write-Warning -Message "Failed to write data to $tgtserver - $_"
 			continue
 		}
-		$server.ConnectionContext.Disconnect()
+		finally {
+			$server.ConnectionContext.Disconnect()
+		}
 	}
 }
 
 END {
-	Write-Log -path $LogFilePath -message "Agent Job History Finished"
+	Write-Verbose -Message "Agent Job History finished: $((Get-Date).DateTime)"
 	$tgtserver.ConnectionContext.Disconnect()
 }
