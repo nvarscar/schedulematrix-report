@@ -23,7 +23,7 @@ load script relies on the dbatools Powershell module - http://dbatools.io or htt
         
    - 2: Run Powershell script to collect data from your environment (or any other method of your choice)
    
-       This is just an *example*: `Powershell.exe <..>\examples\schedulematrix_load.ps1 -NonInteractive`
+       This is just an *example*: `Powershell.exe <..>\examples\schedulematrix_load.ps1 -TargetServer sql1 -TargetDatabase MyDB -SourceServer sql2,sql3\instance1 -NonInteractive`
        
    - 3: Run stored procedure to re-populate report tables
    
