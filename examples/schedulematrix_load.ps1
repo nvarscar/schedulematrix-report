@@ -16,8 +16,7 @@ Param (
 	[object]$TargetCredential,
 	[string]$TargetDatabase = "tempdb",
 	[object[]]$SourceServer = "localhost",
-	[object]$SourceCredential,
-	[string]$LogFileFolder = "."
+	[object]$SourceCredential
 )
 BEGIN {
 	Write-Verbose -Message "Agent Job History started: $((Get-Date).DateTime)"
