@@ -6,7 +6,7 @@ ALTER PROCEDURE schedulematrix.rptJobScheduleChart
 	@WeekStartTime datetime = NULL -- start point of the week schedule
   , @ServerList IntSet READONLY -- list of server IDs
   , @JobList IntSet READONLY -- list of job IDs
-  , @Bucketsize int = 30 -- bucket size in minutes; hour subdivision cells
+  , @BucketSize int = 30 -- bucket size in minutes; hour subdivision cells
 )
 AS
 BEGIN
@@ -37,7 +37,7 @@ INSERT INTO @ColourTable (name, hex) VALUES
 ('green yellow','#ADFF2F'),('medium orchid','#BA55D3'),('burly wood','#DEB887'),
 ('plum','#DDA0DD'),('tan','#D2B48C'),
 ('forest green','#228B22'),('violet','#EE82EE'),('rosy brown','#BC8F8F'),
-('lime green','#32CD32'),('magenta / fuchsia','#FF00FF'),('moccasin','#FFE4B5'),
+('lime green','#32CD32'),('magentaï¿½/ï¿½fuchsia','#FF00FF'),('moccasin','#FFE4B5'),
 ('light green','#90EE90'),('orchid','#DA70D6'),('navajo white','#FFDEAD'),
 ('pale green','#98FB98'),('medium violet red','#C71585'),('peach puff','#FFDAB9'),
 ('dark sea green','#8FBC8F'),('pale violet red','#DB7093'),('misty rose','#FFE4E1'),
@@ -92,9 +92,9 @@ CREATE CLUSTERED INDEX idx_clt_WeekSchedule ON #WeekSchedule( [server_name], Buc
 IF @AdjustedWeekDate IS NULL
 	SET @AdjustedWeekDate = getdate()-7;
 
--- Adjust the date to match the @Bucketsize minutes bucket start time
+-- Adjust the date to match the @BucketSize minutes bucket start time
 SET @AdjustedWeekDate = dateadd(minute
-              ,@Bucketsize * CAST(datepart(minute,@AdjustedWeekDate)/@Bucketsize AS int) -- match the bucket start time with the date specified
+              ,@BucketSize * CAST(datepart(minute,@AdjustedWeekDate)/@BucketSize AS int) -- match the bucket start time with the date specified
 							,dateadd(hour, datediff(hour, '20000101', @AdjustedWeekDate), '20000101') --round down to last hour
 							);
 --Get schedule data from repository
@@ -114,11 +114,11 @@ SELECT
 	,[job_name]
 	,[instance_name]
 	,dateadd(minute
-        ,@Bucketsize * CAST(datepart(minute,start_time)/@Bucketsize AS int) -- match the bucket start time with the date specified
+        ,@BucketSize * CAST(datepart(minute,start_time)/@BucketSize AS int) -- match the bucket start time with the date specified
 					,dateadd(hour, datediff(hour, '20000101', start_time), '20000101') --round down to last hour
 	) as BucketStart
 	,dateadd(minute
-            ,@Bucketsize * CAST(datepart(minute,dateadd(second,[duration_sec],start_time))/@Bucketsize AS int) -- match the bucket end time with the date specified
+            ,@BucketSize * CAST(datepart(minute,dateadd(second,[duration_sec],start_time))/@BucketSize AS int) -- match the bucket end time with the date specified
 						,dateadd(hour, datediff(hour, '20000101', dateadd(second,[duration_sec],start_time)), '20000101') --round down to last hour
 		) as BucketEnd
 	,[start_time] as [start_time]
@@ -155,11 +155,11 @@ INNER JOIN @ColourTable c ON c.id = sh.job_number % (SELECT max(id) FROM @Colour
 	Nums AS(SELECT ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS N FROM L4),
 --...generate buckets for specified week based on size of the bucket
 Dates AS (
-	SELECT TOP (24*7*60/@Bucketsize) 
-	  dateadd(minute, (j.n-1)*@Bucketsize, @AdjustedWeekDate) as BucketStart
-	  ,dateadd(minute, (j.n)*@Bucketsize, @AdjustedWeekDate) as BucketEnd
-	FROM nums j
-	ORDER BY j.n
+	SELECT TOP (24*7*60/@BucketSize) 
+	  dateadd(minute, (j.N-1)*@BucketSize, @AdjustedWeekDate) as BucketStart
+	  ,dateadd(minute, (j.N)*@BucketSize, @AdjustedWeekDate) as BucketEnd
+	FROM Nums j
+	ORDER BY j.N
 )
 , Jobs AS (
 -- Create calendar grid for each existing job and assign it with colour
@@ -262,6 +262,6 @@ GROUP BY
 , gs.instance_name
 , gs.Colour
 , gs.start_time
-, dateadd(minute,-@Bucketsize*rn,BucketStart)
+, dateadd(minute,-@BucketSize*rn,BucketStart)
 ORDER BY server_name, instance_name, job_name, BucketStart
 END

@@ -1,9 +1,41 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2010/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner"><AutoRefresh>0</AutoRefresh><DataSources><DataSource Name="JobHistoryRepository"><ConnectionProperties><DataProvider>SQL</DataProvider><ConnectString>Data Source=localhost;Initial Catalog=DBAdmin</ConnectString><IntegratedSecurity>true</IntegratedSecurity></ConnectionProperties><rd:SecurityType>Integrated</rd:SecurityType><rd:DataSourceID>ffd44797-2414-431d-bdd0-bd5c6522fb11</rd:DataSourceID></DataSource></DataSources><DataSets><DataSet Name="ScheduleMatrix"><Query><DataSourceName>JobHistoryRepository</DataSourceName><QueryParameters><QueryParameter Name="@Servers"><Value>=Parameters!Instances.Value</Value></QueryParameter><QueryParameter Name="@Jobs"><Value>=Parameters!Jobs.Value</Value></QueryParameter><QueryParameter Name="@WeekStartTime"><Value>=Parameters!StartTime.Value</Value></QueryParameter><QueryParameter Name="@BucketSize"><Value>=Parameters!BucketSize.Value</Value></QueryParameter></QueryParameters><CommandText>DECLARE @ServerList IntSet
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="JobHistoryRepository">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString>Data Source=localhost;Initial Catalog=DBAdmin</ConnectString>
+        <IntegratedSecurity>true</IntegratedSecurity>
+      </ConnectionProperties>
+      <rd:SecurityType>Integrated</rd:SecurityType>
+      <rd:DataSourceID>ffd44797-2414-431d-bdd0-bd5c6522fb11</rd:DataSourceID>
+    </DataSource>
+  </DataSources>
+  <DataSets>
+    <DataSet Name="ScheduleMatrix">
+      <Query>
+        <DataSourceName>JobHistoryRepository</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@Servers">
+            <Value>=Parameters!Instances.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@Jobs">
+            <Value>=Parameters!Jobs.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@WeekStartTime">
+            <Value>=Parameters!StartTime.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@BucketSize">
+            <Value>=Parameters!BucketSize.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>DECLARE @ServerList IntSet
 DECLARE @JobList IntSet
 
 INSERT INTO @ServerList 
 SELECT s.server_id
-FROM schedulematrix.servers s
+FROM schedulematrix.Servers s
 WHERE s.server_id IN (@Servers)
 
 INSERT INTO @JobList 
@@ -15,19 +47,1474 @@ EXEC schedulematrix.rptJobScheduleMatrix
 @WeekStartTime = @WeekStartTime
 , @ServerList = @ServerList
 , @JobList = @JobList
-, @BucketSize = @BucketSize</CommandText><rd:UseGenericDesigner>true</rd:UseGenericDesigner></Query><Fields><Field Name="server_name"><DataField>server_name</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="RangePosition"><DataField>RangePosition</DataField><rd:UserDefined>true</rd:UserDefined></Field><Field Name="instance_name"><DataField>instance_name</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="job_name"><DataField>job_name</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="BucketStart"><DataField>BucketStart</DataField><rd:TypeName>System.DateTime</rd:TypeName></Field><Field Name="Weekdays"><DataField>Weekdays</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="Hours"><DataField>Hours</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="Minutes"><DataField>Minutes</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="WeekdaysOrder"><DataField>WeekdaysOrder</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="start_time"><DataField>start_time</DataField><rd:TypeName>System.DateTime</rd:TypeName></Field><Field Name="duration"><DataField>duration</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="execution_count"><DataField>execution_count</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="ServerOrder"><DataField>ServerOrder</DataField><rd:TypeName>System.Int64</rd:TypeName></Field><Field Name="JobGroupsText"><DataField>JobGroupsText</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="JobCount"><DataField>JobCount</DataField><rd:TypeName>System.Int32</rd:TypeName></Field><Field Name="Colour"><DataField>Colour</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="JobTooltip"><DataField>JobTooltip</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="LeftBorderColour"><DataField>LeftBorderColour</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="DefaultBorderColour"><DataField>DefaultBorderColour</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="BorderStyle"><DataField>BorderStyle</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="GroupBorderStyle"><DataField>GroupBorderStyle</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="GroupColour"><DataField>GroupColour</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="GroupTooltip"><DataField>GroupTooltip</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="FailedJobMarker"><DataField>FailedJobMarker</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="GroupBorderColour"><DataField>GroupBorderColour</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="ServerList"><Query><DataSourceName>JobHistoryRepository</DataSourceName><QueryParameters><QueryParameter Name="@ServerType"><Value>=Parameters!ServerType.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT server_name
-FROM schedulematrix.servers
+, @BucketSize = @BucketSize</CommandText>
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <Fields>
+        <Field Name="server_name">
+          <DataField>server_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="RangePosition">
+          <DataField>RangePosition</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="instance_name">
+          <DataField>instance_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="job_name">
+          <DataField>job_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BucketStart">
+          <DataField>BucketStart</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Weekdays">
+          <DataField>Weekdays</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Hours">
+          <DataField>Hours</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Minutes">
+          <DataField>Minutes</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="WeekdaysOrder">
+          <DataField>WeekdaysOrder</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="start_time">
+          <DataField>start_time</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="duration">
+          <DataField>duration</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="execution_count">
+          <DataField>execution_count</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="ServerOrder">
+          <DataField>ServerOrder</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="JobGroupsText">
+          <DataField>JobGroupsText</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="JobCount">
+          <DataField>JobCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Colour">
+          <DataField>Colour</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="JobTooltip">
+          <DataField>JobTooltip</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="LeftBorderColour">
+          <DataField>LeftBorderColour</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="DefaultBorderColour">
+          <DataField>DefaultBorderColour</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="BorderStyle">
+          <DataField>BorderStyle</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupBorderStyle">
+          <DataField>GroupBorderStyle</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupColour">
+          <DataField>GroupColour</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupTooltip">
+          <DataField>GroupTooltip</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="FailedJobMarker">
+          <DataField>FailedJobMarker</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="GroupBorderColour">
+          <DataField>GroupBorderColour</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="ServerList">
+      <Query>
+        <DataSourceName>JobHistoryRepository</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ServerType">
+            <Value>=Parameters!ServerType.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT server_name
+FROM schedulematrix.Servers
  WHERE server_type IN (@ServerType)
-ORDER BY server_name</CommandText></Query><Fields><Field Name="server_name"><DataField>server_name</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet><DataSet Name="JobList"><Query><DataSourceName>JobHistoryRepository</DataSourceName><QueryParameters><QueryParameter Name="@ServerList"><Value>=Parameters!Instances.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT DISTINCT j.job_name
+ORDER BY server_name</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="server_name">
+          <DataField>server_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="JobList">
+      <Query>
+        <DataSourceName>JobHistoryRepository</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ServerList">
+            <Value>=Parameters!Instances.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT DISTINCT j.job_name
 ,j.job_id 
 FROM schedulematrix.Jobs j
 INNER JOIN schedulematrix.JobsServers_Link s ON s.job_id = j.job_id
 WHERE s.server_id IN (@ServerList)
-ORDER BY j.job_name</CommandText></Query><Fields><Field Name="job_name"><DataField>job_name</DataField><rd:UserDefined>true</rd:UserDefined></Field><Field Name="job_id"><DataField>job_id</DataField><rd:TypeName>System.Int32</rd:TypeName></Field></Fields></DataSet><DataSet Name="InstanceList"><Query><DataSourceName>JobHistoryRepository</DataSourceName><QueryParameters><QueryParameter Name="@ServerType"><Value>=Parameters!ServerType.Value</Value></QueryParameter><QueryParameter Name="@ServerName"><Value>=Parameters!Servers.Value</Value></QueryParameter></QueryParameters><CommandText>SELECT instance_name
+ORDER BY j.job_name</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="job_name">
+          <DataField>job_name</DataField>
+          <rd:UserDefined>true</rd:UserDefined>
+        </Field>
+        <Field Name="job_id">
+          <DataField>job_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="InstanceList">
+      <Query>
+        <DataSourceName>JobHistoryRepository</DataSourceName>
+        <QueryParameters>
+          <QueryParameter Name="@ServerType">
+            <Value>=Parameters!ServerType.Value</Value>
+          </QueryParameter>
+          <QueryParameter Name="@ServerName">
+            <Value>=Parameters!Servers.Value</Value>
+          </QueryParameter>
+        </QueryParameters>
+        <CommandText>SELECT instance_name
 , server_id
-FROM schedulematrix.servers
+FROM schedulematrix.Servers
  WHERE server_type IN (@ServerType)
 AND server_name IN (@ServerName)
-ORDER BY instance_name</CommandText></Query><Fields><Field Name="instance_name"><DataField>instance_name</DataField><rd:TypeName>System.String</rd:TypeName></Field><Field Name="server_id"><DataField>server_id</DataField><rd:TypeName>System.Int32</rd:TypeName></Field></Fields></DataSet><DataSet Name="ServerTypeList"><Query><DataSourceName>JobHistoryRepository</DataSourceName><CommandText>SELECT DISTINCT server_type
-FROM schedulematrix.servers
-ORDER BY server_type</CommandText></Query><Fields><Field Name="server_type"><DataField>server_type</DataField><rd:TypeName>System.String</rd:TypeName></Field></Fields></DataSet></DataSets><ReportSections><ReportSection><Body><ReportItems><Rectangle Name="Rectangle1"><ReportItems><Textbox Name="Textbox3"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Failed jobs</Value><Style><FontSize>9pt</FontSize></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox3</rd:DefaultName><Top>0.10207in</Top><Left>4.16265in</Left><Height>0.21in</Height><Width>0.99083in</Width><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox4"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>X</Value><Style><FontSize>9pt</FontSize><Color>Red</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox3</rd:DefaultName><Top>0.10207in</Top><Left>5.15348in</Left><Height>0.21in</Height><Width>0.10417in</Width><ZIndex>1</ZIndex><Style><Border><Color>Red</Color><Style>Solid</Style></Border><VerticalAlign>Middle</VerticalAlign></Style></Textbox><Tablix Name="Tablix2"><TablixCorner><TablixCornerRows><TablixCornerRow><TablixCornerCell><CellContents><Textbox Name="Textbox19"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Legend</Value><Style><FontWeight>Bold</FontWeight></Style></TextRun></TextRuns><Style><TextAlign>Left</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Textbox19</rd:DefaultName><Visibility><Hidden>true</Hidden></Visibility><Style><Border><Color>White</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCornerCell><TablixCornerCell><CellContents><Textbox Name="Textbox21"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox21</rd:DefaultName><Visibility><Hidden>true</Hidden></Visibility><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCornerCell></TablixCornerRow></TablixCornerRows></TablixCorner><TablixBody><TablixColumns><TablixColumn><Width>0.10417in</Width></TablixColumn></TablixColumns><TablixRows><TablixRow><Height>0.21in</Height><TablixCells><TablixCell><CellContents><Textbox Name="JobsColours"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><Style><Border><Style>Solid</Style></Border><BackgroundColor>=IIF(IsNothing(Fields!job_name.Value), "Magenta", Min(Fields!Colour.Value))</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixCell></TablixCells></TablixRow></TablixRows></TablixBody><TablixColumnHierarchy><TablixMembers><TablixMember><Group Name="ColumnGroup"><GroupExpressions><GroupExpression /></GroupExpressions></Group><TablixHeader><Size>0.03125in</Size><CellContents><Textbox Name="Textbox16"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox16</rd:DefaultName><Visibility><Hidden>true</Hidden></Visibility><Style><Border><Color>White</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixHeader></TablixMember></TablixMembers></TablixColumnHierarchy><TablixRowHierarchy><TablixMembers><TablixMember><Group Name="JobColours"><GroupExpressions><GroupExpression>=Fields!job_name.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=Fields!job_name.Value</Value></SortExpression></SortExpressions><TablixHeader><Size>3.39583in</Size><CellContents><Textbox Name="JobNames"><CanShrink>true</CanShrink><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=IIF(IsNothing(Fields!job_name.Value), "Multiple Jobs", Fields!job_name.Value)</Value><Style><FontSize>8pt</FontSize></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><Style><Border><Color>White</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixHeader><TablixMembers><TablixMember><Group Name="Colour"><GroupExpressions><GroupExpression>=Fields!Colour.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=Fields!Colour.Value</Value></SortExpression></SortExpressions><TablixHeader><Size>0.10417in</Size><CellContents><Textbox Name="Colour"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Colour.Value</Value><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Colour</rd:DefaultName><Visibility><Hidden>true</Hidden></Visibility><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixHeader></TablixMember></TablixMembers></TablixMember></TablixMembers></TablixRowHierarchy><KeepTogether>true</KeepTogether><DataSetName>ScheduleMatrix</DataSetName><Filters><Filter><FilterExpression>=Fields!execution_count.Value</FilterExpression><Operator>GreaterThan</Operator><FilterValues><FilterValue DataType="Integer">0</FilterValue></FilterValues></Filter></Filters><Top>0.07082in</Top><Left>0.06in</Left><Height>0.24125in</Height><Width>3.60417in</Width><ZIndex>2</ZIndex><Visibility><Hidden>true</Hidden><ToggleItem>ShowLegendBox</ToggleItem></Visibility><Style><Border><Color>White</Color><Style>None</Style></Border></Style></Tablix><Textbox Name="Textbox5"><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value xml:space="preserve">     </Value><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox5</rd:DefaultName><Top>0.01458in</Top><Left>4.16265in</Left><Height>0.08749in</Height><Width>3.595in</Width><ZIndex>3</ZIndex><Visibility><Hidden>true</Hidden><ToggleItem>ShowLegendBox</ToggleItem></Visibility><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></ReportItems><KeepTogether>true</KeepTogether><Top>1.8175in</Top><Left>0.01042in</Left><Height>0.45125in</Height><Width>7.75765in</Width><Visibility><Hidden>true</Hidden><ToggleItem>ShowLegendBox</ToggleItem></Visibility><Style><Border><Style>None</Style></Border></Style></Rectangle><Textbox Name="textbox1"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Job Schedule Matrix</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>20pt</FontSize><FontWeight>Bold</FontWeight><Color>SteelBlue</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>textbox1</rd:DefaultName><Left>0.01042in</Left><Height>0.36in</Height><Width>5in</Width><ZIndex>1</ZIndex><Style><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="ShowLegendBox"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Show legend</Value><Style><Color>Blue</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><Top>1.57069in</Top><Left>0.01042in</Left><Height>0.24819in</Height><Width>1.22917in</Width><ZIndex>2</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Tablix Name="matrix1"><TablixCorner><TablixCornerRows><TablixCornerRow><TablixCornerCell><CellContents><Rectangle Name="Rectangle2"><ReportItems><Image Name="Expand_all"><Source>Embedded</Source><Value>Expand_all</Value><ActionInfo><Actions><Action><Drillthrough><ReportName>=Globals!ReportName</ReportName><Parameters><Parameter Name="Servers"><Value>=Parameters!Servers.Value</Value></Parameter><Parameter Name="Instances"><Value>=Parameters!Instances.Value</Value></Parameter><Parameter Name="Jobs"><Value>=Parameters!Jobs.Value</Value></Parameter><Parameter Name="StartTime"><Value>=Parameters!StartTime.Value</Value></Parameter><Parameter Name="BucketSize"><Value>=Parameters!BucketSize.Value</Value></Parameter><Parameter Name="Expanded"><Value>Expanded</Value></Parameter><Parameter Name="ServerType"><Value>=Parameters!ServerType.Value</Value></Parameter></Parameters></Drillthrough></Action></Actions></ActionInfo><Height>0.33333in</Height><Width>0.33333in</Width><ToolTip>Expand all</ToolTip><Style><Border><Style>None</Style></Border></Style></Image><Image Name="Collapse_all"><Source>Embedded</Source><Value>Collapseall</Value><ActionInfo><Actions><Action><Drillthrough><ReportName>=Globals!ReportName</ReportName><Parameters><Parameter Name="Servers"><Value>=Parameters!Servers.Value</Value></Parameter><Parameter Name="Instances"><Value>=Parameters!Instances.Value</Value></Parameter><Parameter Name="Jobs"><Value>=Parameters!Jobs.Value</Value></Parameter><Parameter Name="StartTime"><Value>=Parameters!StartTime.Value</Value></Parameter><Parameter Name="BucketSize"><Value>=Parameters!BucketSize.Value</Value></Parameter><Parameter Name="Expanded"><Value>Collapsed</Value></Parameter><Parameter Name="ServerType"><Value>=Parameters!ServerType.Value</Value></Parameter></Parameters></Drillthrough></Action></Actions></ActionInfo><Top>0.025in</Top><Left>1.20833in</Left><Height>0.33333in</Height><Width>0.33333in</Width><ZIndex>1</ZIndex><ToolTip>Collapse all</ToolTip><Style><Border><Style>None</Style></Border></Style></Image><Textbox Name="Textbox10"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Expand all</Value><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox10</rd:DefaultName><Top>0.08458in</Top><Left>0.35292in</Left><Height>0.24562in</Height><Width>0.71875in</Width><ZIndex>2</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><Textbox Name="Textbox11"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>Collapse all</Value><Style /></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox10</rd:DefaultName><Top>0.08646in</Top><Left>1.55555in</Left><Height>0.24375in</Height><Width>0.78125in</Width><ZIndex>3</ZIndex><Style><Border><Style>None</Style></Border><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></ReportItems><KeepTogether>true</KeepTogether><ZIndex>4</ZIndex><Style><Border><Style>None</Style></Border></Style></Rectangle><RowSpan>3</RowSpan></CellContents></TablixCornerCell></TablixCornerRow><TablixCornerRow><TablixCornerCell /></TablixCornerRow><TablixCornerRow><TablixCornerCell /></TablixCornerRow></TablixCornerRows></TablixCorner><TablixBody><TablixColumns><TablixColumn><Width>0.06in</Width></TablixColumn></TablixColumns><TablixRows><TablixRow><Height>0.21in</Height><TablixCells><TablixCell><CellContents><Textbox Name="Textbox27"><CanGrow>true</CanGrow><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style><FontFamily>Tahoma</FontFamily></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Textbox27</rd:DefaultName><Visibility><Hidden>=IIf(IsNothing(Fields!server_name.Value),True,False)</Hidden></Visibility><ToolTip>= Fields!GroupTooltip.Value</ToolTip><Style><Border><Style>None</Style></Border><TopBorder><Style>Solid</Style></TopBorder><BottomBorder><Style>Solid</Style></BottomBorder><LeftBorder><Color>=Fields!GroupBorderColour.Value</Color><Style>=Fields!GroupBorderStyle.Value</Style></LeftBorder><RightBorder><Style>=Fields!GroupBorderStyle.Value</Style></RightBorder><BackgroundColor>=Fields!GroupColour.Value</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents><DataElementOutput>Output</DataElementOutput></TablixCell></TablixCells></TablixRow><TablixRow><Height>0.21in</Height><TablixCells><TablixCell><CellContents><Textbox Name="textbox2"><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!FailedJobMarker.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>9pt</FontSize><Color>Red</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>textbox2</rd:DefaultName><ToolTip>=Fields!JobTooltip.Value</ToolTip><Style><Border><Color>=Fields!DefaultBorderColour.Value</Color><Style>None</Style></Border><TopBorder><Style>Solid</Style></TopBorder><BottomBorder><Style>Solid</Style></BottomBorder><LeftBorder><Color>= Fields!LeftBorderColour.Value</Color><Style>=Fields!BorderStyle.Value</Style></LeftBorder><RightBorder><Style>=Fields!BorderStyle.Value</Style></RightBorder><BackgroundColor>= Fields!Colour.Value</BackgroundColor><VerticalAlign>Middle</VerticalAlign></Style></Textbox></CellContents><DataElementOutput>Output</DataElementOutput></TablixCell></TablixCells></TablixRow></TablixRows></TablixBody><TablixColumnHierarchy><TablixMembers><TablixMember><Group Name="matrix1_Weekdays"><GroupExpressions><GroupExpression>=Fields!Weekdays.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=Fields!WeekdaysOrder.Value</Value></SortExpression></SortExpressions><TablixHeader><Size>0.25in</Size><CellContents><Textbox Name="Weekdays"><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Weekdays.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>Weekdays</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>#6e9eca</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixHeader><TablixMembers><TablixMember><Group Name="matrix1_Hours"><GroupExpressions><GroupExpression>=Fields!Hours.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=CInt(Fields!Hours.Value)</Value></SortExpression></SortExpressions><TablixHeader><Size>0.15in</Size><CellContents><Textbox Name="Hours"><CanGrow>true</CanGrow><CanShrink>true</CanShrink><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!Hours.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>5pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Hours</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>SlateGray</BackgroundColor><VerticalAlign>Middle</VerticalAlign><WritingMode>Vertical</WritingMode></Style></Textbox></CellContents></TablixHeader><TablixMembers><TablixMember><Group Name="matrix1_Minutes"><GroupExpressions><GroupExpression>=Fields!Minutes.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=CInt(Fields!Minutes.Value)</Value></SortExpression></SortExpressions><TablixHeader><Size>0.06666in</Size><CellContents><Textbox Name="Minutes"><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value /><Style><FontFamily>Tahoma</FontFamily><FontSize>4pt</FontSize><FontWeight>Bold</FontWeight><Color>#8fa0b0</Color></Style></TextRun></TextRuns><Style><TextAlign>Center</TextAlign></Style></Paragraph></Paragraphs><rd:DefaultName>Minutes</rd:DefaultName><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>#8fa0b0</BackgroundColor><VerticalAlign>Middle</VerticalAlign><WritingMode>Vertical</WritingMode></Style></Textbox></CellContents></TablixHeader><DataElementOutput>Output</DataElementOutput><KeepTogether>true</KeepTogether></TablixMember></TablixMembers><DataElementOutput>Output</DataElementOutput></TablixMember></TablixMembers><DataElementOutput>Output</DataElementOutput></TablixMember></TablixMembers></TablixColumnHierarchy><TablixRowHierarchy><TablixMembers><TablixMember><Group Name="matrix1_instance_name"><GroupExpressions><GroupExpression>=Fields!instance_name.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=Fields!ServerOrder.Value</Value></SortExpression><SortExpression><Value>=Fields!server_name.Value</Value></SortExpression></SortExpressions><TablixMembers><TablixMember><TablixHeader><Size>2.81668in</Size><CellContents><Textbox Name="instance_name2"><ToggleImage><InitialState>=IIF(Parameters!Expanded.Value = "Expanded",True,False)</InitialState></ToggleImage><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!instance_name.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8pt</FontSize><FontWeight>Bold</FontWeight><Color>Yellow</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><ToolTip>=Fields!instance_name.Value</ToolTip><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>#497ead</BackgroundColor><PaddingLeft>2pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox><rd:Selected>true</rd:Selected></CellContents></TablixHeader></TablixMember><TablixMember><Group Name="job_name"><GroupExpressions><GroupExpression>=Fields!job_name.Value</GroupExpression></GroupExpressions></Group><SortExpressions><SortExpression><Value>=Fields!job_name.Value</Value></SortExpression></SortExpressions><TablixHeader><Size>2.81668in</Size><CellContents><Textbox Name="job_name"><KeepTogether>true</KeepTogether><Paragraphs><Paragraph><TextRuns><TextRun><Value>=Fields!job_name.Value</Value><Style><FontFamily>Tahoma</FontFamily><FontSize>8pt</FontSize><FontWeight>Bold</FontWeight><Color>White</Color></Style></TextRun></TextRuns><Style /></Paragraph></Paragraphs><rd:DefaultName>job_name</rd:DefaultName><ZIndex>4</ZIndex><Style><Border><Color>LightGrey</Color><Style>Solid</Style></Border><BackgroundColor>#497ead</BackgroundColor><PaddingLeft>9pt</PaddingLeft><PaddingRight>2pt</PaddingRight><PaddingTop>2pt</PaddingTop><PaddingBottom>2pt</PaddingBottom></Style></Textbox></CellContents></TablixHeader><TablixMembers><TablixMember><DataElementOutput>Output</DataElementOutput><KeepTogether>true</KeepTogether></TablixMember></TablixMembers><Visibility><Hidden>=IIF(Parameters!Expanded.Value = "Collapsed",True,False)</Hidden><ToggleItem>instance_name2</ToggleItem></Visibility></TablixMember></TablixMembers><DataElementOutput>Output</DataElementOutput></TablixMember></TablixMembers></TablixRowHierarchy><RepeatColumnHeaders>true</RepeatColumnHeaders><RepeatRowHeaders>true</RepeatRowHeaders><KeepTogether>true</KeepTogether><DataSetName>ScheduleMatrix</DataSetName><Top>0.37389in</Top><Left>0.01042in</Left><Height>0.88666in</Height><Width>2.87668in</Width><ZIndex>3</ZIndex><Style><Border><Style>None</Style><Width>0.25pt</Width></Border><TopBorder><Style>None</Style></TopBorder><BottomBorder><Style>None</Style></BottomBorder><LeftBorder><Style>None</Style></LeftBorder><RightBorder><Style>None</Style></RightBorder></Style></Tablix></ReportItems><Height>2.39459in</Height><Style /></Body><Width>7.76807in</Width><Page><LeftMargin>1in</LeftMargin><RightMargin>1in</RightMargin><TopMargin>1in</TopMargin><BottomMargin>1in</BottomMargin><Style /></Page></ReportSection></ReportSections><ReportParameters><ReportParameter Name="ServerType"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>ServerTypeList</DataSetName><ValueField>server_type</ValueField></DataSetReference></DefaultValue><Prompt>Server Type</Prompt><ValidValues><DataSetReference><DataSetName>ServerTypeList</DataSetName><ValueField>server_type</ValueField><LabelField>server_type</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Servers"><DataType>String</DataType><Prompt>Servers</Prompt><ValidValues><DataSetReference><DataSetName>ServerList</DataSetName><ValueField>server_name</ValueField><LabelField>server_name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Instances"><DataType>String</DataType><DefaultValue><DataSetReference><DataSetName>InstanceList</DataSetName><ValueField>server_id</ValueField></DataSetReference></DefaultValue><Prompt>Instances</Prompt><ValidValues><DataSetReference><DataSetName>InstanceList</DataSetName><ValueField>server_id</ValueField><LabelField>instance_name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="Jobs"><DataType>String</DataType><Prompt>Jobs</Prompt><ValidValues><DataSetReference><DataSetName>JobList</DataSetName><ValueField>job_id</ValueField><LabelField>job_name</LabelField></DataSetReference></ValidValues><MultiValue>true</MultiValue></ReportParameter><ReportParameter Name="StartTime"><DataType>DateTime</DataType><DefaultValue><Values><Value>=DateAdd("d",-7,Today())</Value></Values></DefaultValue><Prompt>Start Time</Prompt></ReportParameter><ReportParameter Name="BucketSize"><DataType>Integer</DataType><DefaultValue><Values><Value>30</Value></Values></DefaultValue><Prompt>Interval (min)</Prompt><ValidValues><ParameterValues><ParameterValue><Value>5</Value><Label>5</Label></ParameterValue><ParameterValue><Value>10</Value><Label>10</Label></ParameterValue><ParameterValue><Value>15</Value><Label>15</Label></ParameterValue><ParameterValue><Value>20</Value><Label>20</Label></ParameterValue><ParameterValue><Value>30</Value><Label>30</Label></ParameterValue><ParameterValue><Value>60</Value><Label>60</Label></ParameterValue></ParameterValues></ValidValues></ReportParameter><ReportParameter Name="Expanded"><DataType>String</DataType><DefaultValue><Values><Value>Collapsed</Value></Values></DefaultValue><Prompt>Expanded</Prompt><Hidden>true</Hidden><ValidValues><ParameterValues><ParameterValue><Value>Expanded</Value><Label>Expanded</Label></ParameterValue><ParameterValue><Value>Collapsed</Value><Label>Collapsed</Label></ParameterValue></ParameterValues></ValidValues></ReportParameter></ReportParameters><EmbeddedImages><EmbeddedImage Name="Expand_all"><MIMEType>image/png</MIMEType><ImageData>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAAXNCSVQI5gpbmQAAAAlwSFlzAAAGXAAABlwB4HqF+AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAE1SURBVDjLY/hPADAMiILJh/ErOM/IcwS/CRMYeI8iK7iXjgJy/v+fiKyC4f9xw/XIgBcoOImB9xiSAvft9khAzD4T6E4GvuNICubHXUcCe8yBwlMY+E78/2y1Bqogv4EfAfg4+YFmTGXk26/Pkg5TUD79/XMEWBb2/Mv/aYySHAx2CAX+8upwoCwn1v7/syoHA4MckoLjyEHR3/5ZHyjPwIWhYPECqII+ZkGgCq7XaAoWMjAsgCj4c3fPrEJXk3doCtoZGNohCpBDEq7gxfMqBoaq5y9wKahmgIIKHAoUYAoU0BToJGeDFazTUBdlYBBV11iNquBBvmsmXkf+/z/fxBq/ghvTPaEKdrMw78Ki4P//cn0VSEhevfwfq4K7++3R4gIj0SLHprq6GKaCL+9RwA965k0AEN4VdbkD3LoAAAAASUVORK5CYII=</ImageData></EmbeddedImage><EmbeddedImage Name="Collapseall"><MIMEType>image/png</MIMEType><ImageData>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAAXNCSVQI5gpbmQAAAAlwSFlzAAAGXAAABlwB4HqF+AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEPSURBVDjLY/hPADDQU8HXeFTwAV3Be+n1yEDhOYYC9SvmSEDS2AVDwXHX+8iAH1OB/zxhcQTgFnPBUDC9/NNzBDhs+PwjhoJ8WX040FFSSMdUMB85ENZTR8H7M+/xKyjg5ONRdivHrWASMwMDA5PkF7iCXRaQsLQ4AFGwjY+BgVnmCcIEZQYo0IYouCnAwCxUBnSDRI0HWEE6TEE+RMFPbmZpYYbG/9/LY93ACv7euA4GN/5BvSkk8+ysIEPT///HVd2LsYXDdmDMA1U0/381P64EZ0ABVbT8/z9dVQtnSAJVtP5/eTwCd1ADVbT9/58vLI8ERJEVgFS0///2HgV8Q0n2ZwWzCeSLRwOd9XAAAPntKBi65G6eAAAAAElFTkSuQmCC</ImageData></EmbeddedImage></EmbeddedImages><Language>en-US</Language><ConsumeContainerWhitespace>true</ConsumeContainerWhitespace><rd:ReportUnitType>Inch</rd:ReportUnitType><rd:ReportID>ca2f8f22-ba9e-40a5-8bca-6c903e37a190</rd:ReportID></Report>
+ORDER BY instance_name</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="instance_name">
+          <DataField>instance_name</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="server_id">
+          <DataField>server_id</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+    <DataSet Name="ServerTypeList">
+      <Query>
+        <DataSourceName>JobHistoryRepository</DataSourceName>
+        <CommandText>SELECT DISTINCT server_type
+FROM schedulematrix.Servers
+ORDER BY server_type</CommandText>
+      </Query>
+      <Fields>
+        <Field Name="server_type">
+          <DataField>server_type</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+    </DataSet>
+  </DataSets>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Rectangle Name="Rectangle1">
+            <ReportItems>
+              <Textbox Name="Textbox3">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>Failed jobs</Value>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.10207in</Top>
+                <Left>4.16265in</Left>
+                <Height>0.21in</Height>
+                <Width>0.99083in</Width>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+              <Textbox Name="Textbox4">
+                <CanGrow>true</CanGrow>
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value>X</Value>
+                        <Style>
+                          <FontSize>9pt</FontSize>
+                          <Color>Red</Color>
+                        </Style>
+                      </TextRun>
+                    </TextRuns>
+                    <Style>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox3</rd:DefaultName>
+                <Top>0.10207in</Top>
+                <Left>5.15348in</Left>
+                <Height>0.21in</Height>
+                <Width>0.10417in</Width>
+                <ZIndex>1</ZIndex>
+                <Style>
+                  <Border>
+                    <Color>Red</Color>
+                    <Style>Solid</Style>
+                  </Border>
+                  <VerticalAlign>Middle</VerticalAlign>
+                </Style>
+              </Textbox>
+              <Tablix Name="Tablix2">
+                <TablixCorner>
+                  <TablixCornerRows>
+                    <TablixCornerRow>
+                      <TablixCornerCell>
+                        <CellContents>
+                          <Textbox Name="Textbox19">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Legend</Value>
+                                    <Style>
+                                      <FontWeight>Bold</FontWeight>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Left</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox19</rd:DefaultName>
+                            <Visibility>
+                              <Hidden>true</Hidden>
+                            </Visibility>
+                            <Style>
+                              <Border>
+                                <Color>White</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixCornerCell>
+                      <TablixCornerCell>
+                        <CellContents>
+                          <Textbox Name="Textbox21">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value />
+                                    <Style />
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox21</rd:DefaultName>
+                            <Visibility>
+                              <Hidden>true</Hidden>
+                            </Visibility>
+                            <Style>
+                              <Border>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixCornerCell>
+                    </TablixCornerRow>
+                  </TablixCornerRows>
+                </TablixCorner>
+                <TablixBody>
+                  <TablixColumns>
+                    <TablixColumn>
+                      <Width>0.10417in</Width>
+                    </TablixColumn>
+                  </TablixColumns>
+                  <TablixRows>
+                    <TablixRow>
+                      <Height>0.21in</Height>
+                      <TablixCells>
+                        <TablixCell>
+                          <CellContents>
+                            <Textbox Name="JobsColours">
+                              <CanGrow>true</CanGrow>
+                              <KeepTogether>true</KeepTogether>
+                              <Paragraphs>
+                                <Paragraph>
+                                  <TextRuns>
+                                    <TextRun>
+                                      <Value />
+                                      <Style />
+                                    </TextRun>
+                                  </TextRuns>
+                                  <Style />
+                                </Paragraph>
+                              </Paragraphs>
+                              <Style>
+                                <Border>
+                                  <Style>Solid</Style>
+                                </Border>
+                                <BackgroundColor>=IIF(IsNothing(Fields!job_name.Value), "Magenta", Min(Fields!Colour.Value))</BackgroundColor>
+                                <PaddingLeft>2pt</PaddingLeft>
+                                <PaddingRight>2pt</PaddingRight>
+                                <PaddingTop>2pt</PaddingTop>
+                                <PaddingBottom>2pt</PaddingBottom>
+                              </Style>
+                            </Textbox>
+                          </CellContents>
+                        </TablixCell>
+                      </TablixCells>
+                    </TablixRow>
+                  </TablixRows>
+                </TablixBody>
+                <TablixColumnHierarchy>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="ColumnGroup">
+                        <GroupExpressions>
+                          <GroupExpression />
+                        </GroupExpressions>
+                      </Group>
+                      <TablixHeader>
+                        <Size>0.03125in</Size>
+                        <CellContents>
+                          <Textbox Name="Textbox16">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value />
+                                    <Style />
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox16</rd:DefaultName>
+                            <Visibility>
+                              <Hidden>true</Hidden>
+                            </Visibility>
+                            <Style>
+                              <Border>
+                                <Color>White</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixColumnHierarchy>
+                <TablixRowHierarchy>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="JobColours">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!job_name.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!job_name.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>3.39583in</Size>
+                        <CellContents>
+                          <Textbox Name="JobNames">
+                            <CanShrink>true</CanShrink>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=IIF(IsNothing(Fields!job_name.Value), "Multiple Jobs", Fields!job_name.Value)</Value>
+                                    <Style>
+                                      <FontSize>8pt</FontSize>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <Style>
+                              <Border>
+                                <Color>White</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="Colour">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!Colour.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=Fields!Colour.Value</Value>
+                            </SortExpression>
+                          </SortExpressions>
+                          <TablixHeader>
+                            <Size>0.10417in</Size>
+                            <CellContents>
+                              <Textbox Name="Colour">
+                                <CanGrow>true</CanGrow>
+                                <KeepTogether>true</KeepTogether>
+                                <Paragraphs>
+                                  <Paragraph>
+                                    <TextRuns>
+                                      <TextRun>
+                                        <Value>=Fields!Colour.Value</Value>
+                                        <Style />
+                                      </TextRun>
+                                    </TextRuns>
+                                    <Style />
+                                  </Paragraph>
+                                </Paragraphs>
+                                <rd:DefaultName>Colour</rd:DefaultName>
+                                <Visibility>
+                                  <Hidden>true</Hidden>
+                                </Visibility>
+                                <Style>
+                                  <Border>
+                                    <Color>LightGrey</Color>
+                                    <Style>Solid</Style>
+                                  </Border>
+                                  <PaddingLeft>2pt</PaddingLeft>
+                                  <PaddingRight>2pt</PaddingRight>
+                                  <PaddingTop>2pt</PaddingTop>
+                                  <PaddingBottom>2pt</PaddingBottom>
+                                </Style>
+                              </Textbox>
+                            </CellContents>
+                          </TablixHeader>
+                        </TablixMember>
+                      </TablixMembers>
+                    </TablixMember>
+                  </TablixMembers>
+                </TablixRowHierarchy>
+                <KeepTogether>true</KeepTogether>
+                <DataSetName>ScheduleMatrix</DataSetName>
+                <Filters>
+                  <Filter>
+                    <FilterExpression>=Fields!execution_count.Value</FilterExpression>
+                    <Operator>GreaterThan</Operator>
+                    <FilterValues>
+                      <FilterValue DataType="Integer">0</FilterValue>
+                    </FilterValues>
+                  </Filter>
+                </Filters>
+                <Top>0.07082in</Top>
+                <Left>0.06in</Left>
+                <Height>0.24125in</Height>
+                <Width>3.60417in</Width>
+                <ZIndex>2</ZIndex>
+                <Visibility>
+                  <Hidden>true</Hidden>
+                  <ToggleItem>ShowLegendBox</ToggleItem>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Color>White</Color>
+                    <Style>None</Style>
+                  </Border>
+                </Style>
+              </Tablix>
+              <Textbox Name="Textbox5">
+                <KeepTogether>true</KeepTogether>
+                <Paragraphs>
+                  <Paragraph>
+                    <TextRuns>
+                      <TextRun>
+                        <Value xml:space="preserve">     </Value>
+                        <Style />
+                      </TextRun>
+                    </TextRuns>
+                    <Style />
+                  </Paragraph>
+                </Paragraphs>
+                <rd:DefaultName>Textbox5</rd:DefaultName>
+                <Top>0.01458in</Top>
+                <Left>4.16265in</Left>
+                <Height>0.08749in</Height>
+                <Width>3.595in</Width>
+                <ZIndex>3</ZIndex>
+                <Visibility>
+                  <Hidden>true</Hidden>
+                  <ToggleItem>ShowLegendBox</ToggleItem>
+                </Visibility>
+                <Style>
+                  <Border>
+                    <Style>None</Style>
+                  </Border>
+                  <PaddingLeft>2pt</PaddingLeft>
+                  <PaddingRight>2pt</PaddingRight>
+                  <PaddingTop>2pt</PaddingTop>
+                  <PaddingBottom>2pt</PaddingBottom>
+                </Style>
+              </Textbox>
+            </ReportItems>
+            <KeepTogether>true</KeepTogether>
+            <Top>1.8175in</Top>
+            <Left>0.01042in</Left>
+            <Height>0.45125in</Height>
+            <Width>7.75765in</Width>
+            <Visibility>
+              <Hidden>true</Hidden>
+              <ToggleItem>ShowLegendBox</ToggleItem>
+            </Visibility>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Rectangle>
+          <Textbox Name="textbox1">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Job Schedule Matrix</Value>
+                    <Style>
+                      <FontFamily>Tahoma</FontFamily>
+                      <FontSize>20pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <Color>SteelBlue</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>textbox1</rd:DefaultName>
+            <Left>0.01042in</Left>
+            <Height>0.36in</Height>
+            <Width>5in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="ShowLegendBox">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>Show legend</Value>
+                    <Style>
+                      <Color>Blue</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+            </Paragraphs>
+            <Top>1.57069in</Top>
+            <Left>0.01042in</Left>
+            <Height>0.24819in</Height>
+            <Width>1.22917in</Width>
+            <ZIndex>2</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Tablix Name="matrix1">
+            <TablixCorner>
+              <TablixCornerRows>
+                <TablixCornerRow>
+                  <TablixCornerCell>
+                    <CellContents>
+                      <Rectangle Name="Rectangle2">
+                        <ReportItems>
+                          <Image Name="Expand_all">
+                            <Source>Embedded</Source>
+                            <Value>Expand_all</Value>
+                            <ActionInfo>
+                              <Actions>
+                                <Action>
+                                  <Drillthrough>
+                                    <ReportName>=Globals!ReportName</ReportName>
+                                    <Parameters>
+                                      <Parameter Name="Servers">
+                                        <Value>=Parameters!Servers.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Instances">
+                                        <Value>=Parameters!Instances.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Jobs">
+                                        <Value>=Parameters!Jobs.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="StartTime">
+                                        <Value>=Parameters!StartTime.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="BucketSize">
+                                        <Value>=Parameters!BucketSize.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Expanded">
+                                        <Value>Expanded</Value>
+                                      </Parameter>
+                                      <Parameter Name="ServerType">
+                                        <Value>=Parameters!ServerType.Value</Value>
+                                      </Parameter>
+                                    </Parameters>
+                                  </Drillthrough>
+                                </Action>
+                              </Actions>
+                            </ActionInfo>
+                            <Height>0.33333in</Height>
+                            <Width>0.33333in</Width>
+                            <ToolTip>Expand all</ToolTip>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                            </Style>
+                          </Image>
+                          <Image Name="Collapse_all">
+                            <Source>Embedded</Source>
+                            <Value>Collapseall</Value>
+                            <ActionInfo>
+                              <Actions>
+                                <Action>
+                                  <Drillthrough>
+                                    <ReportName>=Globals!ReportName</ReportName>
+                                    <Parameters>
+                                      <Parameter Name="Servers">
+                                        <Value>=Parameters!Servers.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Instances">
+                                        <Value>=Parameters!Instances.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Jobs">
+                                        <Value>=Parameters!Jobs.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="StartTime">
+                                        <Value>=Parameters!StartTime.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="BucketSize">
+                                        <Value>=Parameters!BucketSize.Value</Value>
+                                      </Parameter>
+                                      <Parameter Name="Expanded">
+                                        <Value>Collapsed</Value>
+                                      </Parameter>
+                                      <Parameter Name="ServerType">
+                                        <Value>=Parameters!ServerType.Value</Value>
+                                      </Parameter>
+                                    </Parameters>
+                                  </Drillthrough>
+                                </Action>
+                              </Actions>
+                            </ActionInfo>
+                            <Top>0.025in</Top>
+                            <Left>1.20833in</Left>
+                            <Height>0.33333in</Height>
+                            <Width>0.33333in</Width>
+                            <ZIndex>1</ZIndex>
+                            <ToolTip>Collapse all</ToolTip>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                            </Style>
+                          </Image>
+                          <Textbox Name="Textbox10">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Expand all</Value>
+                                    <Style />
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox10</rd:DefaultName>
+                            <Top>0.08458in</Top>
+                            <Left>0.35292in</Left>
+                            <Height>0.24562in</Height>
+                            <Width>0.71875in</Width>
+                            <ZIndex>2</ZIndex>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                          <Textbox Name="Textbox11">
+                            <CanGrow>true</CanGrow>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>Collapse all</Value>
+                                    <Style />
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Textbox10</rd:DefaultName>
+                            <Top>0.08646in</Top>
+                            <Left>1.55555in</Left>
+                            <Height>0.24375in</Height>
+                            <Width>0.78125in</Width>
+                            <ZIndex>3</ZIndex>
+                            <Style>
+                              <Border>
+                                <Style>None</Style>
+                              </Border>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </ReportItems>
+                        <KeepTogether>true</KeepTogether>
+                        <ZIndex>4</ZIndex>
+                        <Style>
+                          <Border>
+                            <Style>None</Style>
+                          </Border>
+                        </Style>
+                      </Rectangle>
+                      <RowSpan>3</RowSpan>
+                    </CellContents>
+                  </TablixCornerCell>
+                </TablixCornerRow>
+                <TablixCornerRow>
+                  <TablixCornerCell />
+                </TablixCornerRow>
+                <TablixCornerRow>
+                  <TablixCornerCell />
+                </TablixCornerRow>
+              </TablixCornerRows>
+            </TablixCorner>
+            <TablixBody>
+              <TablixColumns>
+                <TablixColumn>
+                  <Width>0.06in</Width>
+                </TablixColumn>
+              </TablixColumns>
+              <TablixRows>
+                <TablixRow>
+                  <Height>0.21in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="Textbox27">
+                          <CanGrow>true</CanGrow>
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value />
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style />
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>Textbox27</rd:DefaultName>
+                          <Visibility>
+                            <Hidden>=IIf(IsNothing(Fields!server_name.Value),True,False)</Hidden>
+                          </Visibility>
+                          <ToolTip>= Fields!GroupTooltip.Value</ToolTip>
+                          <Style>
+                            <Border>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>=Fields!GroupBorderColour.Value</Color>
+                              <Style>=Fields!GroupBorderStyle.Value</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>=Fields!GroupBorderStyle.Value</Style>
+                            </RightBorder>
+                            <BackgroundColor>=Fields!GroupColour.Value</BackgroundColor>
+                            <PaddingLeft>2pt</PaddingLeft>
+                            <PaddingRight>2pt</PaddingRight>
+                            <PaddingTop>2pt</PaddingTop>
+                            <PaddingBottom>2pt</PaddingBottom>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+                <TablixRow>
+                  <Height>0.21in</Height>
+                  <TablixCells>
+                    <TablixCell>
+                      <CellContents>
+                        <Textbox Name="textbox2">
+                          <KeepTogether>true</KeepTogether>
+                          <Paragraphs>
+                            <Paragraph>
+                              <TextRuns>
+                                <TextRun>
+                                  <Value>=Fields!FailedJobMarker.Value</Value>
+                                  <Style>
+                                    <FontFamily>Tahoma</FontFamily>
+                                    <FontSize>9pt</FontSize>
+                                    <Color>Red</Color>
+                                  </Style>
+                                </TextRun>
+                              </TextRuns>
+                              <Style>
+                                <TextAlign>Center</TextAlign>
+                              </Style>
+                            </Paragraph>
+                          </Paragraphs>
+                          <rd:DefaultName>textbox2</rd:DefaultName>
+                          <ToolTip>=Fields!JobTooltip.Value</ToolTip>
+                          <Style>
+                            <Border>
+                              <Color>=Fields!DefaultBorderColour.Value</Color>
+                              <Style>None</Style>
+                            </Border>
+                            <TopBorder>
+                              <Style>Solid</Style>
+                            </TopBorder>
+                            <BottomBorder>
+                              <Style>Solid</Style>
+                            </BottomBorder>
+                            <LeftBorder>
+                              <Color>= Fields!LeftBorderColour.Value</Color>
+                              <Style>=Fields!BorderStyle.Value</Style>
+                            </LeftBorder>
+                            <RightBorder>
+                              <Style>=Fields!BorderStyle.Value</Style>
+                            </RightBorder>
+                            <BackgroundColor>= Fields!Colour.Value</BackgroundColor>
+                            <VerticalAlign>Middle</VerticalAlign>
+                          </Style>
+                        </Textbox>
+                      </CellContents>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </TablixCell>
+                  </TablixCells>
+                </TablixRow>
+              </TablixRows>
+            </TablixBody>
+            <TablixColumnHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="matrix1_Weekdays">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!Weekdays.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!WeekdaysOrder.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixHeader>
+                    <Size>0.25in</Size>
+                    <CellContents>
+                      <Textbox Name="Weekdays">
+                        <KeepTogether>true</KeepTogether>
+                        <Paragraphs>
+                          <Paragraph>
+                            <TextRuns>
+                              <TextRun>
+                                <Value>=Fields!Weekdays.Value</Value>
+                                <Style>
+                                  <FontFamily>Tahoma</FontFamily>
+                                  <FontWeight>Bold</FontWeight>
+                                  <Color>White</Color>
+                                </Style>
+                              </TextRun>
+                            </TextRuns>
+                            <Style />
+                          </Paragraph>
+                        </Paragraphs>
+                        <rd:DefaultName>Weekdays</rd:DefaultName>
+                        <Style>
+                          <Border>
+                            <Color>LightGrey</Color>
+                            <Style>Solid</Style>
+                          </Border>
+                          <BackgroundColor>#6e9eca</BackgroundColor>
+                          <PaddingLeft>2pt</PaddingLeft>
+                          <PaddingRight>2pt</PaddingRight>
+                          <PaddingTop>2pt</PaddingTop>
+                          <PaddingBottom>2pt</PaddingBottom>
+                        </Style>
+                      </Textbox>
+                    </CellContents>
+                  </TablixHeader>
+                  <TablixMembers>
+                    <TablixMember>
+                      <Group Name="matrix1_Hours">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!Hours.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=CInt(Fields!Hours.Value)</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>0.15in</Size>
+                        <CellContents>
+                          <Textbox Name="Hours">
+                            <CanGrow>true</CanGrow>
+                            <CanShrink>true</CanShrink>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!Hours.Value</Value>
+                                    <Style>
+                                      <FontFamily>Tahoma</FontFamily>
+                                      <FontSize>5pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style>
+                                  <TextAlign>Center</TextAlign>
+                                </Style>
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>Hours</rd:DefaultName>
+                            <Style>
+                              <Border>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>SlateGray</BackgroundColor>
+                              <VerticalAlign>Middle</VerticalAlign>
+                              <WritingMode>Vertical</WritingMode>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <Group Name="matrix1_Minutes">
+                            <GroupExpressions>
+                              <GroupExpression>=Fields!Minutes.Value</GroupExpression>
+                            </GroupExpressions>
+                          </Group>
+                          <SortExpressions>
+                            <SortExpression>
+                              <Value>=CInt(Fields!Minutes.Value)</Value>
+                            </SortExpression>
+                          </SortExpressions>
+                          <TablixHeader>
+                            <Size>0.06666in</Size>
+                            <CellContents>
+                              <Textbox Name="Minutes">
+                                <KeepTogether>true</KeepTogether>
+                                <Paragraphs>
+                                  <Paragraph>
+                                    <TextRuns>
+                                      <TextRun>
+                                        <Value />
+                                        <Style>
+                                          <FontFamily>Tahoma</FontFamily>
+                                          <FontSize>4pt</FontSize>
+                                          <FontWeight>Bold</FontWeight>
+                                          <Color>#8fa0b0</Color>
+                                        </Style>
+                                      </TextRun>
+                                    </TextRuns>
+                                    <Style>
+                                      <TextAlign>Center</TextAlign>
+                                    </Style>
+                                  </Paragraph>
+                                </Paragraphs>
+                                <rd:DefaultName>Minutes</rd:DefaultName>
+                                <Style>
+                                  <Border>
+                                    <Color>LightGrey</Color>
+                                    <Style>Solid</Style>
+                                  </Border>
+                                  <BackgroundColor>#8fa0b0</BackgroundColor>
+                                  <VerticalAlign>Middle</VerticalAlign>
+                                  <WritingMode>Vertical</WritingMode>
+                                </Style>
+                              </Textbox>
+                            </CellContents>
+                          </TablixHeader>
+                          <DataElementOutput>Output</DataElementOutput>
+                          <KeepTogether>true</KeepTogether>
+                        </TablixMember>
+                      </TablixMembers>
+                      <DataElementOutput>Output</DataElementOutput>
+                    </TablixMember>
+                  </TablixMembers>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixMember>
+              </TablixMembers>
+            </TablixColumnHierarchy>
+            <TablixRowHierarchy>
+              <TablixMembers>
+                <TablixMember>
+                  <Group Name="matrix1_instance_name">
+                    <GroupExpressions>
+                      <GroupExpression>=Fields!instance_name.Value</GroupExpression>
+                    </GroupExpressions>
+                  </Group>
+                  <SortExpressions>
+                    <SortExpression>
+                      <Value>=Fields!ServerOrder.Value</Value>
+                    </SortExpression>
+                    <SortExpression>
+                      <Value>=Fields!server_name.Value</Value>
+                    </SortExpression>
+                  </SortExpressions>
+                  <TablixMembers>
+                    <TablixMember>
+                      <TablixHeader>
+                        <Size>2.81668in</Size>
+                        <CellContents>
+                          <Textbox Name="instance_name2">
+                            <ToggleImage>
+                              <InitialState>=IIF(Parameters!Expanded.Value = "Expanded",True,False)</InitialState>
+                            </ToggleImage>
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!instance_name.Value</Value>
+                                    <Style>
+                                      <FontFamily>Tahoma</FontFamily>
+                                      <FontSize>8pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>Yellow</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <ToolTip>=Fields!instance_name.Value</ToolTip>
+                            <Style>
+                              <Border>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#497ead</BackgroundColor>
+                              <PaddingLeft>2pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                    </TablixMember>
+                    <TablixMember>
+                      <Group Name="job_name">
+                        <GroupExpressions>
+                          <GroupExpression>=Fields!job_name.Value</GroupExpression>
+                        </GroupExpressions>
+                      </Group>
+                      <SortExpressions>
+                        <SortExpression>
+                          <Value>=Fields!job_name.Value</Value>
+                        </SortExpression>
+                      </SortExpressions>
+                      <TablixHeader>
+                        <Size>2.81668in</Size>
+                        <CellContents>
+                          <Textbox Name="job_name">
+                            <KeepTogether>true</KeepTogether>
+                            <Paragraphs>
+                              <Paragraph>
+                                <TextRuns>
+                                  <TextRun>
+                                    <Value>=Fields!job_name.Value</Value>
+                                    <Style>
+                                      <FontFamily>Tahoma</FontFamily>
+                                      <FontSize>8pt</FontSize>
+                                      <FontWeight>Bold</FontWeight>
+                                      <Color>White</Color>
+                                    </Style>
+                                  </TextRun>
+                                </TextRuns>
+                                <Style />
+                              </Paragraph>
+                            </Paragraphs>
+                            <rd:DefaultName>job_name</rd:DefaultName>
+                            <ZIndex>4</ZIndex>
+                            <Style>
+                              <Border>
+                                <Color>LightGrey</Color>
+                                <Style>Solid</Style>
+                              </Border>
+                              <BackgroundColor>#497ead</BackgroundColor>
+                              <PaddingLeft>9pt</PaddingLeft>
+                              <PaddingRight>2pt</PaddingRight>
+                              <PaddingTop>2pt</PaddingTop>
+                              <PaddingBottom>2pt</PaddingBottom>
+                            </Style>
+                          </Textbox>
+                        </CellContents>
+                      </TablixHeader>
+                      <TablixMembers>
+                        <TablixMember>
+                          <DataElementOutput>Output</DataElementOutput>
+                          <KeepTogether>true</KeepTogether>
+                        </TablixMember>
+                      </TablixMembers>
+                      <Visibility>
+                        <Hidden>=IIF(Parameters!Expanded.Value = "Collapsed",True,False)</Hidden>
+                        <ToggleItem>instance_name2</ToggleItem>
+                      </Visibility>
+                    </TablixMember>
+                  </TablixMembers>
+                  <DataElementOutput>Output</DataElementOutput>
+                </TablixMember>
+              </TablixMembers>
+            </TablixRowHierarchy>
+            <RepeatColumnHeaders>true</RepeatColumnHeaders>
+            <RepeatRowHeaders>true</RepeatRowHeaders>
+            <KeepTogether>true</KeepTogether>
+            <DataSetName>ScheduleMatrix</DataSetName>
+            <Top>0.37389in</Top>
+            <Left>0.01042in</Left>
+            <Height>0.88666in</Height>
+            <Width>2.87668in</Width>
+            <ZIndex>3</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+                <Width>0.25pt</Width>
+              </Border>
+              <TopBorder>
+                <Style>None</Style>
+              </TopBorder>
+              <BottomBorder>
+                <Style>None</Style>
+              </BottomBorder>
+              <LeftBorder>
+                <Style>None</Style>
+              </LeftBorder>
+              <RightBorder>
+                <Style>None</Style>
+              </RightBorder>
+            </Style>
+          </Tablix>
+        </ReportItems>
+        <Height>2.39459in</Height>
+        <Style />
+      </Body>
+      <Width>7.76807in</Width>
+      <Page>
+        <LeftMargin>1in</LeftMargin>
+        <RightMargin>1in</RightMargin>
+        <TopMargin>1in</TopMargin>
+        <BottomMargin>1in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="ServerType">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>ServerTypeList</DataSetName>
+          <ValueField>server_type</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Server Type</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ServerTypeList</DataSetName>
+          <ValueField>server_type</ValueField>
+          <LabelField>server_type</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Servers">
+      <DataType>String</DataType>
+      <Prompt>Servers</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>ServerList</DataSetName>
+          <ValueField>server_name</ValueField>
+          <LabelField>server_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Instances">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <DataSetReference>
+          <DataSetName>InstanceList</DataSetName>
+          <ValueField>server_id</ValueField>
+        </DataSetReference>
+      </DefaultValue>
+      <Prompt>Instances</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>InstanceList</DataSetName>
+          <ValueField>server_id</ValueField>
+          <LabelField>instance_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="Jobs">
+      <DataType>String</DataType>
+      <Prompt>Jobs</Prompt>
+      <ValidValues>
+        <DataSetReference>
+          <DataSetName>JobList</DataSetName>
+          <ValueField>job_id</ValueField>
+          <LabelField>job_name</LabelField>
+        </DataSetReference>
+      </ValidValues>
+      <MultiValue>true</MultiValue>
+    </ReportParameter>
+    <ReportParameter Name="StartTime">
+      <DataType>DateTime</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>=DateAdd("d",-7,Today())</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Start Time</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="BucketSize">
+      <DataType>Integer</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>30</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Interval (min)</Prompt>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>5</Value>
+            <Label>5</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>10</Value>
+            <Label>10</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>15</Value>
+            <Label>15</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>20</Value>
+            <Label>20</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>30</Value>
+            <Label>30</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>60</Value>
+            <Label>60</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+    <ReportParameter Name="Expanded">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>Collapsed</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>Expanded</Prompt>
+      <Hidden>true</Hidden>
+      <ValidValues>
+        <ParameterValues>
+          <ParameterValue>
+            <Value>Expanded</Value>
+            <Label>Expanded</Label>
+          </ParameterValue>
+          <ParameterValue>
+            <Value>Collapsed</Value>
+            <Label>Collapsed</Label>
+          </ParameterValue>
+        </ParameterValues>
+      </ValidValues>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>2</NumberOfColumns>
+      <NumberOfRows>4</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>ServerType</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>Servers</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Jobs</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>StartTime</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>BucketSize</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>Expanded</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>Instances</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <EmbeddedImages>
+    <EmbeddedImage Name="Expand_all">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAAXNCSVQI5gpbmQAAAAlwSFlzAAAGXAAABlwB4HqF+AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAE1SURBVDjLY/hPADAMiILJh/ErOM/IcwS/CRMYeI8iK7iXjgJy/v+fiKyC4f9xw/XIgBcoOImB9xiSAvft9khAzD4T6E4GvuNICubHXUcCe8yBwlMY+E78/2y1Bqogv4EfAfg4+YFmTGXk26/Pkg5TUD79/XMEWBb2/Mv/aYySHAx2CAX+8upwoCwn1v7/syoHA4MckoLjyEHR3/5ZHyjPwIWhYPECqII+ZkGgCq7XaAoWMjAsgCj4c3fPrEJXk3doCtoZGNohCpBDEq7gxfMqBoaq5y9wKahmgIIKHAoUYAoU0BToJGeDFazTUBdlYBBV11iNquBBvmsmXkf+/z/fxBq/ghvTPaEKdrMw78Ki4P//cn0VSEhevfwfq4K7++3R4gIj0SLHprq6GKaCL+9RwA965k0AEN4VdbkD3LoAAAAASUVORK5CYII=</ImageData>
+    </EmbeddedImage>
+    <EmbeddedImage Name="Collapseall">
+      <MIMEType>image/png</MIMEType>
+      <ImageData>iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAAAAABWESUoAAAAAXNCSVQI5gpbmQAAAAlwSFlzAAAGXAAABlwB4HqF+AAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAEPSURBVDjLY/hPADDQU8HXeFTwAV3Be+n1yEDhOYYC9SvmSEDS2AVDwXHX+8iAH1OB/zxhcQTgFnPBUDC9/NNzBDhs+PwjhoJ8WX040FFSSMdUMB85ENZTR8H7M+/xKyjg5ONRdivHrWASMwMDA5PkF7iCXRaQsLQ4AFGwjY+BgVnmCcIEZQYo0IYouCnAwCxUBnSDRI0HWEE6TEE+RMFPbmZpYYbG/9/LY93ACv7euA4GN/5BvSkk8+ysIEPT///HVd2LsYXDdmDMA1U0/381P64EZ0ABVbT8/z9dVQtnSAJVtP5/eTwCd1ADVbT9/58vLI8ERJEVgFS0///2HgV8Q0n2ZwWzCeSLRwOd9XAAAPntKBi65G6eAAAAAElFTkSuQmCC</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <Language>en-US</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>ca2f8f22-ba9e-40a5-8bca-6c903e37a190</rd:ReportID>
+</Report>
