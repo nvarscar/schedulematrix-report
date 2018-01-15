@@ -12,22 +12,31 @@ load script relies on the dbatools Powershell module - http://dbatools.io or htt
 - (optional; for data collection) Powershell 3.0 + dbatools module
 
 # setup
-1. Run all of the sql scripts from .\db_objects in the database of your choice. 
+1. Run sql scripts from .\db_objects in the database of your choice:
+   - schedulematrix_tables.sql
+   - schedulematrix_loadStageData.sql
+   - schedulematrix_rptJobScheduleChart.sql
+   - schedulematrix_rptJobScheduleMatrix.sql
+   
    This would create necessary objects in the schedulematrix schema.
-2. Upload reports to your Reporting Services server and configure data sources to point to the database in step 1.
+   
+2. Upload reports from .\reports to your Reporting Services server and configure data sources in those reports to point to the database from step 1.
 3. Set up a job to collect job history data from your environment:
    - 1: Run SQL code to truncate stage table
    
         `TRUNCATE TABLE [<your DB name here>].schedulematrix.JobScheduleStage`
         
-        
-   - 2: Run Powershell script to collect data from your environment (or any other method of your choice)
+   - 2: Run Powershell script to collect data from your environment (or any other method of your choice). This example uses .\examples\schedulematrix_load.ps1 to collect data and requires dbatools module to be installed (see links above):
    
-       This is just an *example*: `Powershell.exe <..>\examples\schedulematrix_load.ps1 -TargetServer sql1 -TargetDatabase MyDB -SourceServer sql2,sql3\instance1 -NonInteractive`
+       `Powershell.exe <..>\examples\schedulematrix_load.ps1 -TargetServer sql1 -TargetDatabase MyDB -SourceServer sql2,sql3\instance1 -NonInteractive`
        
    - 3: Run stored procedure to re-populate report tables
    
         `EXEC [<your DB name here>].schedulematrix.loadStageData`
-        
+
+4. (optional) Download and install dbatools module if you want to utilize schedulematrix_load.ps1: 
+    - Run Powershell 5.0 as administrator
+    - Run `Install-Module dbatools`; agree to trust the repository.
+    
 # known issues
-- SQL 2016 would not handle borders correctly, enforcing borders on each cell of the report, 
+- SQL 2016 would not handle borders correctly, enforcing borders on each cell of the report.
